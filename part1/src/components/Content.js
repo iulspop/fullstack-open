@@ -1,15 +1,10 @@
+import Part from './Part'
 export default function Content({ course }) {
   return (
     <>
-      <p>
-        {course.part1} {course.exercises1}
-      </p>
-      <p>
-        {course.part2} {course.exercises2}
-      </p>
-      <p>
-        {course.part3} {course.exercises3}
-      </p>
+      <Part part={course.part1} exercises={course.exercises1} />
+      <Part part={course.part2} exercises={course.exercises2} />
+      <Part part={course.part3} exercises={course.exercises3} />
     </>
   )
 }
