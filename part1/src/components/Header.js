@@ -1,3 +1,3 @@
-export default function Header({ name }) {
-  return <h1>{name}</h1>
+export default function Header({ course }) {
+  return <h1>{course}</h1>
 }

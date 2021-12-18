@@ -1,4 +1,3 @@
-export default function Total({ course }) {
-  const { exercises1, exercises2, exercises3 } = course
-  return <p>Number of exercises {exercises1 + exercises2 + exercises3}</p>
+export default function Total({ parts }) {
+  return <p>Number of exercises {parts.reduce((num, part) => part.exercises + num, 0)}</p>
 }
