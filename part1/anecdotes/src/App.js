@@ -21,14 +21,27 @@ export default function App() {
     .forEach((num, idx) => (pointsObject[idx] = num))
 
   const [points, setPoints] = useState(pointsObject)
-  const incrementPoint = quoteID => () => setPoints({ ...points, [quoteID]: points[quoteID] + 1 })
+  const incrementPoints = quoteID => () => setPoints({ ...points, [quoteID]: points[quoteID] + 1 })
 
+  let quoteWithMaxPointsID = 0
+  for (const quoteID in points) {
+    const pointA = points[quoteID]
+    const pointB = points[quoteWithMaxPointsID]
+
+    if (pointA > pointB) {
+      quoteWithMaxPointsID = quoteID
+    }
+  }
   return (
     <div>
+      <h2>Anecdote of the day</h2>
       <p>{anecdotes[quoteID]}</p>
       <p>has {points[quoteID]} votes</p>
-      <button onClick={incrementPoint(quoteID)}>Vote</button>
+      <button onClick={incrementPoints(quoteID)}>Vote</button>
       <button onClick={selectRandomQuote}>Random Anecdote</button>
+      <h2>Anecdote with most votes</h2>
+      <p>{anecdotes[quoteWithMaxPointsID]}</p>
+      <p>has {points[quoteWithMaxPointsID]} votes</p>
     </div>
   )
 }
