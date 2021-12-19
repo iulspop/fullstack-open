@@ -12,13 +12,23 @@ export default function App() {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients',
   ]
 
-  const [selected, setSelected] = useState(0)
-  const selectRandom = () => setSelected(Math.floor(Math.random() * 6))
+  const [quoteID, setQuoteID] = useState(0)
+  const selectRandomQuote = () => setQuoteID(Math.floor(Math.random() * 6))
+
+  const pointsObject = {}
+  Array(7)
+    .fill(0)
+    .forEach((num, idx) => (pointsObject[idx] = num))
+
+  const [points, setPoints] = useState(pointsObject)
+  const incrementPoint = quoteID => () => setPoints({ ...points, [quoteID]: points[quoteID] + 1 })
 
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
-      <button onClick={selectRandom}>Random Anecdote</button>
+      <p>{anecdotes[quoteID]}</p>
+      <p>has {points[quoteID]} votes</p>
+      <button onClick={incrementPoint(quoteID)}>Vote</button>
+      <button onClick={selectRandomQuote}>Random Anecdote</button>
     </div>
   )
 }
