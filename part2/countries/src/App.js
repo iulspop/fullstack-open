@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 
 import './App.css'
+import Country from './components/Country'
 
 export default function App() {
   const [countries, setCountries] = useState([])
@@ -26,14 +27,7 @@ export default function App() {
       </form>
       <ul>
         {filteredCountries.length === 1 ? (
-          <div>
-            <h2>{countries[0].name.common}</h2>
-            <p>capital {countries[0].capital}</p>
-            <p>population {countries[0].population}</p>
-            <h3>languages</h3>
-            <ul>{listLanguages(countries[0])}</ul>
-            <img class="flag" src={countries[0].flags.png}/>
-          </div>
+          <Country country={countries[0]}/>
         ) : filteredCountries.length <= 10 ? (
           filteredCountries.map(country => <li key={country.ccn3}>{country.name.common}</li>)
         ) : (
