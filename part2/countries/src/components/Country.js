@@ -6,7 +6,15 @@ export default function Country({ country }) {
       <p>population {country.population}</p>
       <h3>languages</h3>
       <ul>{listLanguages(country)}</ul>
-      <img class="flag" src={country.flags.png} />
+      <img className="flag" src={country.flags.png} />
     </div>
   )
+}
+
+const listLanguages = country => {
+  const items = []
+  for (let language in country.languages) {
+    items.push(<li key={language}>{country.languages[language]}</li>)
+  }
+  return items
 }

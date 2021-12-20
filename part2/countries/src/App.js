@@ -3,6 +3,7 @@ import axios from 'axios'
 
 import './App.css'
 import Country from './components/Country'
+import CountryListItem from './components/CountryListItem'
 
 export default function App() {
   const [countries, setCountries] = useState([])
@@ -16,7 +17,6 @@ export default function App() {
     setCountriesFilter(e.target.value)
   }
 
-  console.log(countries)
   const filteredCountries = countries.filter(country => country.name.common.match(new RegExp(countriesFilter, 'i')))
 
   return (
@@ -29,19 +29,11 @@ export default function App() {
         {filteredCountries.length === 1 ? (
           <Country country={countries[0]}/>
         ) : filteredCountries.length <= 10 ? (
-          filteredCountries.map(country => <li key={country.ccn3}>{country.name.common}</li>)
+          filteredCountries.map(country => <CountryListItem key={country.ccn3} country={country}/>)
         ) : (
           <p>Too many matches, specify another filter</p>
         )}
       </ul>
     </div>
   )
-}
-
-const listLanguages = country => {
-  const items = []
-  for (let language in country.languages) {
-    items.push(<li key={language}>{country.languages[language]}</li>)
-  }
-  return items
 }
