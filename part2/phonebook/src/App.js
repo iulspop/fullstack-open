@@ -4,12 +4,14 @@ import axios from 'axios'
 const personsAPI = {
   getAll: () => axios.get('http://localhost:3001/persons'),
   post: ({ name, number }) => axios.post('http://localhost:3001/persons', { name, number }),
+  put: (person, number) => axios.put(`http://localhost:3001/persons/${person.id}`, { ...person, number }),
   delete: id => axios.delete(`http://localhost:3001/persons/${id}`),
 }
 
 export default function App() {
   const [persons, setPersons] = useState([])
   useEffect(() => personsAPI.getAll().then(res => setPersons(res.data)), [])
+  const resetPersons = () => personsAPI.getAll().then(res => setPersons(res.data))
 
   const [filter, setFilter] = useState('')
   const [newName, setNewName] = useState('Turtles')
@@ -25,16 +27,17 @@ export default function App() {
     const name = e.target.name.value
     const number = e.target.number.value
 
-    if (contains(persons, name)) {
-      alert('Name already added.')
+    const person = find(persons, name)
+    if (person && window.confirm(`${person.name} is already aded to phonebook, replce old number with a new one?`)) {
+      personsAPI.put(person, number).then(resetPersons)
     } else {
-      personsAPI.post({ name, number }).then(() => personsAPI.getAll().then(res => setPersons(res.data)))
+      personsAPI.post({ name, number }).then(resetPersons)
     }
   }
 
   const deletePerson = id => () => {
     if (window.confirm(`Delete ${persons.find(person => person.id === id).name}`)) {
-      personsAPI.delete(id).then(() => personsAPI.getAll().then(res => setPersons(res.data)))
+      personsAPI.delete(id).then(resetPersons)
     }
   }
 
@@ -74,9 +77,9 @@ export default function App() {
   )
 }
 
-const contains = (persons, name) => {
+const find = (persons, name) => {
   for (let person of persons) {
-    if (person.name === name) return true
+    if (person.name === name) return person
   }
-  return false
+  return null
 }
