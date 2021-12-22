@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
+import './App.css'
+
 const personsAPI = {
   getAll: () => axios.get('http://localhost:3001/persons'),
   post: ({ name, number }) => axios.post('http://localhost:3001/persons', { name, number }),
@@ -10,8 +12,12 @@ const personsAPI = {
 
 export default function App() {
   const [persons, setPersons] = useState([])
-  useEffect(() => personsAPI.getAll().then(res => setPersons(res.data)), [])
   const resetPersons = () => personsAPI.getAll().then(res => setPersons(res.data))
+  useEffect(() => resetPersons(), [])
+
+  const [flashMessage, setFlashMessage] = useState(null)
+  const flashError = createTrigger(setFlashMessage)('error')
+  const flashSuccess = createTrigger(setFlashMessage)('success')
 
   const [filter, setFilter] = useState('')
   const [newName, setNewName] = useState('Turtles')
@@ -28,22 +34,30 @@ export default function App() {
     const number = e.target.number.value
 
     const person = find(persons, name)
-    if (person && window.confirm(`${person.name} is already aded to phonebook, replce old number with a new one?`)) {
-      personsAPI.put(person, number).then(resetPersons)
+    if (person) {
+      if (window.confirm(`${person.name} is already aded to phonebook, replce old number with a new one?`)) {
+        personsAPI.put(person, number).then(resetPersons)
+        flashSuccess(`Updated ${person.name}'s phone number`)
+      }
     } else {
       personsAPI.post({ name, number }).then(resetPersons)
+      flashSuccess(`Added ${name} to phonebook`)
     }
   }
 
   const deletePerson = id => () => {
-    if (window.confirm(`Delete ${persons.find(person => person.id === id).name}`)) {
-      personsAPI.delete(id).then(resetPersons)
+    const person = persons.find(person => person.id === id)
+    if (window.confirm(`Delete ${person.name}`)) {
+      personsAPI.delete(id).then(resetPersons).catch(() => flashError('server error, try again'))
+      flashSuccess(`Deleted ${person.name} from phonebook`)
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      {flashMessage?.type === 'error' ? <div className="error">{flashMessage.text}</div> : ''}
+      {flashMessage?.type === 'success' ? <div className="success">{flashMessage.text}</div> : ''}
       <form>
         <label htmlFor="filter">filter shown with</label>
         <input name="filter" value={filter} onChange={handleFilterChange} />
@@ -82,4 +96,9 @@ const find = (persons, name) => {
     if (person.name === name) return person
   }
   return null
+}
+
+const createTrigger = setFlashMessage => type => text => {
+  setFlashMessage({ type, text })
+  setTimeout(() => setFlashMessage(null), 3000)
 }
