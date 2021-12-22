@@ -4,6 +4,7 @@ import axios from 'axios'
 const personsAPI = {
   getAll: () => axios.get('http://localhost:3001/persons'),
   post: ({ name, number }) => axios.post('http://localhost:3001/persons', { name, number }),
+  delete: id => axios.delete(`http://localhost:3001/persons/${id}`),
 }
 
 export default function App() {
@@ -27,9 +28,13 @@ export default function App() {
     if (contains(persons, name)) {
       alert('Name already added.')
     } else {
-      personsAPI
-        .post({ name, number })
-        .then(() => personsAPI.getAll().then(res => setPersons(res.data)))
+      personsAPI.post({ name, number }).then(() => personsAPI.getAll().then(res => setPersons(res.data)))
+    }
+  }
+
+  const deletePerson = id => () => {
+    if (window.confirm(`Delete ${persons.find(person => person.id === id).name}`)) {
+      personsAPI.delete(id).then(() => personsAPI.getAll().then(res => setPersons(res.data)))
     }
   }
 
@@ -56,9 +61,12 @@ export default function App() {
       <ul>
         {persons
           .filter(person => person.name.match(new RegExp(filter, 'i')))
-          .map((person, idx) => (
-            <li key={idx}>
-              {person.name} {person.number}
+          .map(person => (
+            <li key={person.id}>
+              <p>
+                {person.name} {person.number}
+              </p>
+              <button onClick={deletePerson(person.id)}>delete</button>
             </li>
           ))}
       </ul>

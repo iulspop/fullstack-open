@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": 1
-    },
-    {
       "name": "Ada Lovelace",
       "number": "39-44-5323523",
       "id": 2
@@ -21,11 +16,6 @@
       "id": 4
     },
     {
-      "name": "Turtles",
-      "number": "+1(500)999-000",
-      "id": 5
-    },
-    {
       "name": "Dragons",
       "number": "+1(500)999-000",
       "id": 6
@@ -34,6 +24,11 @@
       "name": "Zerg",
       "number": "+1(500)999-000",
       "id": 7
+    },
+    {
+      "name": "Turtles",
+      "number": "+1(500)999-000",
+      "id": 8
     }
   ]
 }
