@@ -22,7 +22,9 @@ export default function App() {
     if (contains(persons, name)) {
       alert('Name already added.')
     } else {
-      setPersons(persons.concat({ name, number }))
+      axios
+        .post('http://localhost:3001/persons', { name, number })
+        .then(() => axios.get('http://localhost:3001/persons').then(res => setPersons(res.data)))
     }
   }
 
