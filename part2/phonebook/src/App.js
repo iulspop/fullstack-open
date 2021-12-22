@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
+const personsAPI = {
+  getAll: () => axios.get('http://localhost:3001/persons'),
+  post: ({ name, number }) => axios.post('http://localhost:3001/persons', { name, number }),
+}
+
 export default function App() {
   const [persons, setPersons] = useState([])
-  useEffect(() => axios.get('http://localhost:3001/persons').then(res => setPersons(res.data)), [])
+  useEffect(() => personsAPI.getAll().then(res => setPersons(res.data)), [])
 
   const [filter, setFilter] = useState('')
   const [newName, setNewName] = useState('Turtles')
@@ -22,9 +27,9 @@ export default function App() {
     if (contains(persons, name)) {
       alert('Name already added.')
     } else {
-      axios
-        .post('http://localhost:3001/persons', { name, number })
-        .then(() => axios.get('http://localhost:3001/persons').then(res => setPersons(res.data)))
+      personsAPI
+        .post({ name, number })
+        .then(() => personsAPI.getAll().then(res => setPersons(res.data)))
     }
   }
 
