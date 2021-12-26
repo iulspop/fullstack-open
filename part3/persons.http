@@ -1,0 +1,29 @@
+GET http://localhost:3000/api/persons/ccd69df6-37c6-444b-aaa1-6d4c10f784f4
+
+###
+
+GET http://localhost:3000/api/persons
+
+###
+
+POST http://localhost:3000/api/persons
+Content-Type: application/json
+
+{
+  "name": "Turtle",
+  "number": "000"
+}
+
+###
+
+DELETE http://localhost:3000/api/persons/ccd69df6-37c6-444b-aaa1-6d4c10f784f4
+
+###
+
+POST http://localhost:3000/api/persons
+Content-Type: application/json
+
+{
+  "name": "Turtle",
+  "number": "000"
+}
