@@ -1,10 +1,14 @@
 const express = require('express')
+const morgan = require('morgan')
+
 const fs = require('fs')
 const uuid = require('uuid')
 
 const app = express()
 
 app.use(express.json())
+morgan.token('body', req => JSON.stringify(req.body))
+app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body'))
 
 app.get('/api/persons', (_, res) => {
   const persons = JSON.parse(fs.readFileSync('./db.json', 'utf-8'))
