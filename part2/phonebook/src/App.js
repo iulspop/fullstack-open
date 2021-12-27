@@ -3,11 +3,13 @@ import axios from 'axios'
 
 import './App.css'
 
+const host = '172.18.201.45:3000'
+
 const personsAPI = {
-  getAll: () => axios.get('http://localhost:3001/persons'),
-  post: ({ name, number }) => axios.post('http://localhost:3001/persons', { name, number }),
-  put: (person, number) => axios.put(`http://localhost:3001/persons/${person.id}`, { ...person, number }),
-  delete: id => axios.delete(`http://localhost:3001/persons/${id}`),
+  getAll: () => axios.get(`http://${host}/api/persons`),
+  post: ({ name, number }) => axios.post(`http://${host}/api/persons`, { name, number }),
+  put: (person, number) => axios.put(`http://${host}/api/persons/${person.id}`, { ...person, number }),
+  delete: id => axios.delete(`http://${host}/api/persons/${id}`),
 }
 
 export default function App() {
@@ -35,7 +37,7 @@ export default function App() {
 
     const person = find(persons, name)
     if (person) {
-      if (window.confirm(`${person.name} is already aded to phonebook, replce old number with a new one?`)) {
+      if (window.confirm(`${person.name} is already added to phonebook, replce old number with a new one?`)) {
         personsAPI.put(person, number).then(resetPersons)
         flashSuccess(`Updated ${person.name}'s phone number`)
       }
@@ -48,7 +50,10 @@ export default function App() {
   const deletePerson = id => () => {
     const person = persons.find(person => person.id === id)
     if (window.confirm(`Delete ${person.name}`)) {
-      personsAPI.delete(id).then(resetPersons).catch(() => flashError('server error, try again'))
+      personsAPI
+        .delete(id)
+        .catch(() => flashError('server error, try again'))
+        .then(resetPersons)
       flashSuccess(`Deleted ${person.name} from phonebook`)
     }
   }
